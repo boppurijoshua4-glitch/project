@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Film Platform | Powered by Brave Labs Studios</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Inter Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              red: '#e50914',
+              gold: '#ffb703',
+              dark: '#0f0f12',
+              card: '#18181c',
+              hover: '#24242b'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom scrollbar for cinema feel */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f0f12;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #2a2a35;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #e50914;
+    }
+    .glass-effect {
+      background: rgba(24, 24, 28, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+  </style>
+</head>
+<body class="bg-brand-dark text-gray-100 font-sans min-h-screen flex flex-col selection:bg-brand-red selection:text-white">
+
+  <!-- ================= HEADER / NAVBAR ================= -->
+  <header class="sticky top-0 z-40 glass-effect border-b border-gray-800 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="showSection('home')">
+        <div class="bg-gradient-to-tr from-red-600 to-red-400 p-2.5 rounded-xl shadow-lg shadow-red-900/40">
+          <i class="fa-solid font-black fa-film text-xl text-white"></i>
+        </div>
+        <div>
+          <span class="text-xl sm:text-2xl font-extrabold tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-red-500">
+            FILM PLATFORM
+          </span>
+          <span class="block text-[10px] uppercase tracking-widest text-amber-400 font-semibold">
+            <i class="fa-solid fa-bolt text-[9px] mr-1"></i>Powered by Brave Labs Studios
+          </span>
+        </div>
+      </div>
+
+      <!-- Navigation Links (Desktop) -->
+      <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
+        <button onclick="showSection('home')" id="nav-home" class="hover:text-red-500 transition-colors flex items-center space-x-2 text-red-500">
+          <i class="fa-solid fa-house"></i> <span>Home</span>
+        </button>
+        <button onclick="showSection('top10')" id="nav-top10" class="hover:text-red-500 transition-colors flex items-center space-x-2 text-gray-400">
+          <i class="fa-solid fa-trophy text-amber-400"></i> <span>Weekly Top 10</span>
+        </button>
+        <button onclick="showSection('monetization')" id="nav-monetization" class="hover:text-red-500 transition-colors flex items-center space-x-2 text-gray-400">
+          <i class="fa-solid fa-sack-dollar text-emerald-400"></i> <span>Monetization</span>
+        </button>
+      </nav>
+
+      <!-- Header Action Buttons -->
+      <div class="flex items-center space-x-3">
+        <!-- Submit Film Button -->
+        <button onclick="openUploadModal()" class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white px-4 py-2 rounded-lg font-semibold text-xs sm:text-sm flex items-center space-x-2 shadow-lg shadow-red-900/30 transition-all hover:scale-105 active:scale-95">
+          <i class="fa-solid fa-cloud-arrow-up"></i>
+          <span class="hidden sm:inline">Upload Film</span>
+        </button>
+
+        <!-- Admin Login Button -->
+        <button onclick="openAdminModal()" class="bg-gray-800 hover:bg-gray-700 text-gray-200 border border-gray-700 px-3 py-2 rounded-lg text-xs sm:text-sm font-medium flex items-center space-x-2 transition-all">
+          <i class="fa-solid fa-shield-halved text-amber-400"></i>
+          <span class="hidden sm:inline" id="admin-btn-text">Admin</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Nav Bar -->
+    <div class="md:hidden flex justify-around bg-black/40 border-t border-gray-800 py-2.5 text-xs text-gray-400">
+      <button onclick="showSection('home')" class="flex flex-col items-center space-y-1">
+        <i class="fa-solid fa-house text-sm"></i>
+        <span>Home</span>
+      </button>
+      <button onclick="showSection('top10')" class="flex flex-col items-center space-y-1">
+        <i class="fa-solid fa-trophy text-amber-400 text-sm"></i>
+        <span>Top 10</span>
+      </button>
+      <button onclick="showSection('monetization')" class="flex flex-col items-center space-y-1">
+        <i class="fa-solid fa-sack-dollar text-emerald-400 text-sm"></i>
+        <span>Earn</span>
+      </button>
+    </div>
+  </header>
+
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- Notification Alert Box -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-3 pointer-events-none"></div>
+
+    <!-- SECTION 1: HOME (FILM CATALOG) -->
+    <section id="section-home" class="space-y-8">
+      
+      <!-- HERO BANNER / FEATURED SPOTLIGHT -->
+      <div id="hero-spotlight" class="relative rounded-2xl overflow-hidden bg-gradient-to-r from-gray-900 via-brand-card to-black border border-gray-800 shadow-2xl">
+        <!-- Rendered via JS -->
+      </div>
+
+      <!-- SEARCH & FILTER BAR -->
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-brand-card p-4 rounded-xl border border-gray-800">
+        <div class="relative w-full sm:w-80">
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+          <input type="text" id="search-input" oninput="filterFilms()" placeholder="Search title, director, or tag..." class="w-full bg-brand-dark border border-gray-700 rounded-lg pl-9 pr-4 py-2 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:border-red-500">
+        </div>
+
+        <!-- Filter Genres -->
+        <div class="flex items-center space-x-2 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0 scrollbar-none" id="genre-filters">
+          <button onclick="setGenreFilter('All')" class="genre-btn active px-3 py-1.5 rounded-lg text-xs font-medium bg-red-600 text-white whitespace-nowrap transition-colors">All Short Films</button>
+          <button onclick="setGenreFilter('Drama')" class="genre-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-800 hover:bg-gray-700 text-gray-300 whitespace-nowrap transition-colors">Drama</button>
+          <button onclick="setGenreFilter('Sci-Fi')" class="genre-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-800 hover:bg-gray-700 text-gray-300 whitespace-nowrap transition-colors">Sci-Fi</button>
+          <button onclick="setGenreFilter('Thriller')" class="genre-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-800 hover:bg-gray-700 text-gray-300 whitespace-nowrap transition-colors">Thriller</button>
+          <button onclick="setGenreFilter('Comedy')" class="genre-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-800 hover:bg-gray-700 text-gray-300 whitespace-nowrap transition-colors">Comedy</button>
+        </div>
+      </div>
+
+      <!-- MAIN FILM GRID -->
+      <div>
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-bold text-white flex items-center">
+            <i class="fa-solid fa-clapperboard text-red-500 mr-2"></i> Trending Short Films
+          </h2>
+          <span id="film-count" class="text-xs text-gray-400">Showing 0 films</span>
+        </div>
+
+        <div id="films-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <!-- Film Cards injected here -->
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: WEEKLY TOP 10 LEADERBOARD -->
+    <section id="section-top10" class="hidden space-y-8">
+      <div class="bg-gradient-to-r from-amber-950/40 via-brand-card to-red-950/30 p-6 rounded-2xl border border-amber-500/20 shadow-xl">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+          <div>
+            <span class="bg-amber-500/20 text-amber-400 text-xs font-extrabold uppercase px-3 py-1 rounded-full border border-amber-500/30">
+              <i class="fa-solid fa-fire mr-1"></i> Weekly Ranking
+            </span>
+            <h1 class="text-2xl sm:text-3xl font-black text-white mt-2">Top 10 Short Films</h1>
+            <p class="text-gray-400 text-sm mt-1">Rankings update dynamically based on viewer engagement and total view count!</p>
+          </div>
+          <div class="text-right bg-brand-dark/80 p-4 rounded-xl border border-gray-800">
+            <p class="text-xs text-gray-400">Current Leaderboard Cycle</p>
+            <p class="text-sm font-bold text-amber-400"><i class="fa-regular fa-clock mr-1"></i> Resets Every Sunday</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOP 1 SPOTLIGHT CARD -->
+      <div id="top1-spotlight" class="relative">
+        <!-- Rendered via JS -->
+      </div>
+
+      <!-- TOP 2 - 10 LIST -->
+      <div>
+        <h3 class="text-lg font-bold text-gray-200 mb-4 flex items-center">
+          <i class="fa-solid fa-list-ol text-red-500 mr-2"></i> Rank 2 to 10
+        </h3>
+        <div id="top10-list" class="space-y-3">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: MONETIZATION PROGRAM (POWERED BY BRAVE LABS) -->
+    <section id="section-monetization" class="hidden space-y-8">
+      <div class="bg-gradient-to-r from-emerald-950/40 via-brand-card to-emerald-900/20 p-8 rounded-2xl border border-emerald-500/30 shadow-2xl text-center md:text-left flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="space-y-3 max-w-2xl">
+          <span class="bg-emerald-500/20 text-emerald-400 text-xs font-bold uppercase px-3 py-1 rounded-full border border-emerald-500/30">
+            <i class="fa-solid fa-sparkles mr-1"></i> Upcoming Creator Program
+          </span>
+          <h1 class="text-3xl sm:text-4xl font-extrabold text-white">Monetize Your Short Films</h1>
+          <p class="text-gray-300 text-sm leading-relaxed">
+            Brave Labs Studios is introducing a revolutionary revenue sharing system for indie filmmakers. Get paid directly for every single view your short films achieve!
+          </p>
+        </div>
+        <div class="bg-brand-dark p-6 rounded-xl border border-emerald-500/30 text-center w-full md:w-auto">
+          <p class="text-xs text-gray-400 font-medium uppercase tracking-wider">Estimated Revenue Pool</p>
+          <p class="text-3xl font-black text-emerald-400 my-1">$15,000+</p>
+          <p class="text-[11px] text-gray-400">Allocated for Top Directors this Month</p>
+        </div>
+      </div>
+
+      <!-- MONETIZATION FEATURES GRID -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-brand-card p-6 rounded-xl border border-gray-800 space-y-3">
+          <div class="w-12 h-12 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center justify-center text-xl font-bold border border-emerald-500/20">
+            <i class="fa-solid fa-eye"></i>
+          </div>
+          <h3 class="text-lg font-bold text-white">View Count RPM</h3>
+          <p class="text-xs text-gray-400 leading-relaxed">Earn direct payouts based on validated views. Higher viewer retention unlocks premium RPM tiers.</p>
+        </div>
+
+        <div class="bg-brand-card p-6 rounded-xl border border-gray-800 space-y-3">
+          <div class="w-12 h-12 bg-amber-500/10 text-amber-400 rounded-xl flex items-center justify-center text-xl font-bold border border-amber-500/20">
+            <i class="fa-solid fa-crown"></i>
+          </div>
+          <h3 class="text-lg font-bold text-white">Weekly Top 1 Bonus</h3>
+          <p class="text-xs text-gray-400 leading-relaxed">The film that hits Top 1 rank in our weekly leaderboard receives an exclusive cash prize from Brave Labs Studios.</p>
+        </div>
+
+        <div class="bg-brand-card p-6 rounded-xl border border-gray-800 space-y-3">
+          <div class="w-12 h-12 bg-red-500/10 text-red-400 rounded-xl flex items-center justify-center text-xl font-bold border border-red-500/20">
+            <i class="fa-solid fa-clapperboard"></i>
+          </div>
+          <h3 class="text-lg font-bold text-white">Production Grants</h3>
+          <p class="text-xs text-gray-400 leading-relaxed">Top performing creators gain eligibility for full feature film funding directly backed by Brave Labs Studios.</p>
+        </div>
+      </div>
+
+      <!-- EARNING CALCULATOR DEMO -->
+      <div class="bg-brand-card p-6 rounded-2xl border border-gray-800 space-y-6">
+        <h3 class="text-xl font-bold text-white flex items-center">
+          <i class="fa-solid fa-calculator text-emerald-400 mr-2"></i> Creator Revenue Estimator
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+          <div class="space-y-4">
+            <div>
+              <label class="block text-xs text-gray-400 mb-2 font-medium">Estimated Monthly Views</label>
+              <input type="range" id="view-slider" min="1000" max="500000" step="1000" value="50000" oninput="updateEarningsCalc()" class="w-full accent-emerald-500 bg-gray-800 rounded-lg">
+              <div class="flex justify-between text-xs text-gray-400 mt-1">
+                <span>1K views</span>
+                <span id="slider-view-val" class="text-emerald-400 font-bold">50,000 views</span>
+                <span>500K views</span>
+              </div>
+            </div>
+          </div>
+          <div class="bg-brand-dark p-6 rounded-xl border border-emerald-500/20 text-center">
+            <p class="text-xs text-gray-400">Potential Earnings</p>
+            <p id="estimated-payout" class="text-4xl font-extrabold text-emerald-400 my-2">$250.00</p>
+            <p class="text-[11px] text-gray-500">Based on average $5.00 RPM rate per 1,000 views</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: ADMIN DASHBOARD (PROTECTED) -->
+    <section id="section-admin" class="hidden space-y-8">
+      <div class="flex items-center justify-between bg-brand-card p-6 rounded-2xl border border-gray-800">
+        <div>
+          <span class="bg-amber-500/20 text-amber-400 text-xs font-bold uppercase px-3 py-1 rounded-full border border-amber-500/30">
+            <i class="fa-solid fa-user-shield mr-1"></i> Private Control Panel
+          </span>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-white mt-2">Film Moderation Portal</h1>
+          <p class="text-gray-400 text-xs mt-1">Logged in as Brave Labs Admin</p>
+        </div>
+        <button onclick="logoutAdmin()" class="bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white px-4 py-2 rounded-lg text-xs font-semibold transition-all border border-red-500/30">
+          <i class="fa-solid fa-right-from-bracket mr-1"></i> Lock Portal
+        </button>
+      </div>
+
+      <!-- PENDING APPROVALS LIST -->
+      <div class="bg-brand-card rounded-2xl border border-gray-800 overflow-hidden">
+        <div class="p-4 sm:p-6 border-b border-gray-800 flex items-center justify-between">
+          <h3 class="font-bold text-white flex items-center">
+            <i class="fa-solid fa-hourglass-half text-amber-400 mr-2"></i> Submissions Awaiting Approval
+          </h3>
+          <span id="pending-count-badge" class="bg-amber-500/20 text-amber-400 text-xs px-2.5 py-1 rounded-full font-bold">0 Pending</span>
+        </div>
+
+        <div id="pending-films-list" class="divide-y divide-gray-800">
+          <!-- Pending items injected via JS -->
+        </div>
+      </div>
+
+      <!-- PUBLISHED FILMS MANAGEMENT -->
+      <div class="bg-brand-card rounded-2xl border border-gray-800 overflow-hidden">
+        <div class="p-4 sm:p-6 border-b border-gray-800">
+          <h3 class="font-bold text-white flex items-center">
+            <i class="fa-solid fa-circle-check text-emerald-400 mr-2"></i> Approved & Live Films Catalog
+          </h3>
+        </div>
+
+        <div id="approved-films-list" class="divide-y divide-gray-800">
+          <!-- Approved items injected via JS -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- ================= MODALS ================= -->
+
+  <!-- 1. VIDEO PLAYER MODAL -->
+  <div id="modal-player" class="fixed inset-0 z-50 hidden bg-black/95 backdrop-blur-md flex items-center justify-center p-2 sm:p-4">
+    <div class="bg-brand-card border border-gray-800 rounded-2xl w-full max-w-4xl overflow-hidden shadow-2xl flex flex-col max-h-[95vh]">
+      <!-- Header -->
+      <div class="p-4 border-b border-gray-800 flex items-center justify-between bg-brand-dark/50">
+        <div class="flex items-center space-x-3">
+          <span class="bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase">Now Playing</span>
+          <h3 id="player-title" class="font-bold text-white text-base sm:text-lg truncate">Film Title</h3>
+        </div>
+        <button onclick="closePlayerModal()" class="text-gray-400 hover:text-white text-xl p-1">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Player Frame -->
+      <div class="relative bg-black w-full aspect-video flex items-center justify-center overflow-hidden">
+        <div id="player-container" class="w-full h-full flex items-center justify-center">
+          <!-- Dynamic Iframe / Video element -->
+        </div>
+      </div>
+
+      <!-- Video Details Footnote -->
+      <div class="p-4 space-y-2 overflow-y-auto bg-brand-card">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center space-x-3 text-xs text-gray-400">
+            <span id="player-director" class="text-gray-200 font-semibold">Director: Unknown</span>
+            <span>•</span>
+            <span id="player-genre" class="bg-gray-800 px-2 py-0.5 rounded text-gray-300">Genre</span>
+          </div>
+          <div class="flex items-center space-x-2 bg-red-500/10 text-red-400 px-3 py-1 rounded-full border border-red-500/20 text-xs font-bold">
+            <i class="fa-solid fa-eye"></i>
+            <span id="player-views">0 Views</span>
+          </div>
+        </div>
+        <p id="player-description" class="text-xs text-gray-300 leading-relaxed pt-1">Film description goes here...</p>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- 2. UPLOAD FILM MODAL -->
+  <div id="modal-upload" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-brand-card border border-gray-800 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl space-y-4 p-6 relative">
+      <button onclick="closeUploadModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="space-y-1">
+        <h2 class="text-xl font-bold text-white flex items-center">
+          <i class="fa-solid fa-film text-red-500 mr-2"></i> Upload Your Short Film
+        </h2>
+        <p class="text-xs text-gray-400">Submissions are reviewed by Brave Labs Admin before publication.</p>
+      </div>
+
+      <form id="upload-form" onsubmit="handleFilmSubmission(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-gray-300 mb-1">Film Title *</label>
+          <input type="text" id="up-title" required placeholder="e.g. The Silent Horizon" class="w-full bg-brand-dark border border-gray-700 rounded-lg p-2.5 text-xs text-white focus:border-red-500 focus:outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-gray-300 mb-1">Director / Creator Name *</label>
+            <input type="text" id="up-director" required placeholder="Your Name" class="w-full bg-brand-dark border border-gray-700 rounded-lg p-2.5 text-xs text-white focus:border-red-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-300 mb-1">Genre *</label>
+            <select id="up-genre" required class="w-full bg-brand-dark border border-gray-700 rounded-lg p-2.5 text-xs text-white focus:border-red-500 focus:outline-none">
+              <option value="Drama">Drama</option>
+              <option value="Sci-Fi">Sci-Fi</option>
+              <option value="Thriller">Thriller</option>
+              <option value="Comedy">Comedy</option>
+              <option value="Action">Action</option>
+              <option value="Documentary">Documentary</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-300 mb-1">Video Stream URL (YouTube, Vimeo, or MP4) *</label>
+          <input type="url" id="up-videourl" required placeholder="https://www.youtube.com/watch?v=..." class="w-full bg-brand-dark border border-gray-700 rounded-lg p-2.5 text-xs text-white focus:border-red-500 focus:outline-none">
+          <span class="text-[10px] text-gray-500 mt-1 block">Supports YouTube URLs, Vimeo links, or direct MP4 URLs</span>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-300 mb-1">Poster Thumbnail Image URL *</label>
+          <input type="url" id="up-thumburl" required placeholder="https://images.unsplash.com/photo-..." class="w-full bg-brand-dark border border-gray-700 rounded-lg p-2.5 text-xs text-white focus:border-red-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-300 mb-1">Logline / Short Synopsis *</label>
+          <textarea id="up-description" rows="3" required placeholder="Briefly describe what your short film is about..." class="w-full bg-brand-dark border border-gray-700 rounded-lg p-2.5 text-xs text-white focus:border-red-500 focus:outline-none"></textarea>
+        </div>
+
+        <div class="pt-2">
+          <button type="submit" class="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold py-3 rounded-lg text-sm transition-all shadow-lg shadow-red-900/40">
+            Submit Film for Review
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- 3. ADMIN AUTHENTICATION MODAL -->
+  <div id="modal-admin-login" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-brand-card border border-gray-800 rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl p-6 relative">
+      <button onclick="closeAdminModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="text-center space-y-2 mb-6">
+        <div class="w-12 h-12 bg-amber-500/10 text-amber-400 rounded-full flex items-center justify-center mx-auto text-xl border border-amber-500/20">
+          <i class="fa-solid fa-lock"></i>
+        </div>
+        <h3 class="text-xl font-bold text-white">Admin Access</h3>
+        <p class="text-xs text-gray-400">Enter the private admin password to access moderation portal.</p>
+      </div>
+
+      <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-gray-300 mb-1">Admin Password</label>
+          <input type="password" id="admin-password-input" required placeholder="••••••••" class="w-full bg-brand-dark border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-amber-400 focus:outline-none text-center tracking-widest">
+        </div>
+
+        <button type="submit" class="w-full bg-amber-500 hover:bg-amber-400 text-black font-extrabold py-2.5 rounded-lg text-sm transition-all shadow-lg shadow-amber-900/20">
+          Authenticate Access
+        </button>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="border-t border-gray-800 bg-black/60 py-8 mt-12 text-center text-xs text-gray-500">
+    <div class="max-w-7xl mx-auto px-4 space-y-3">
+      <div class="flex items-center justify-center space-x-2 text-gray-300 font-semibold">
+        <span>FILM PLATFORM</span>
+        <span>•</span>
+        <span class="text-amber-400">POWERED BY BRAVE LABS STUDIOS</span>
+      </div>
+      <p>Empowering indie filmmakers with direct uploading, view count rankings, and monetization.</p>
+      <p class="text-[10px] text-gray-600">© 2026 Film Platform & Brave Labs Studios. All rights reserved.</p>
+    </div>
+  </footer>
+
+
+  <!-- ================= JAVASCRIPT LOGIC ================= -->
+  <script>
+    // INITIAL MOCK DATA SET
+    const DEFAULT_FILMS = [
+      {
+        id: 'film-1',
+        title: 'Echoes of Tomorrow',
+        director: 'Maya Lin',
+        genre: 'Sci-Fi',
+        videoUrl: 'https://www.youtube.com/watch?v=d9MyW72ELq0',
+        thumbnail: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80',
+        description: 'In a dystopian metropolis, a rogue engineer discovers a hidden frequency transmitting messages from a future timeline.',
+        views: 14250,
+        status: 'approved',
+        createdAt: Date.now() - 86400000 * 5
+      },
+      {
+        id: 'film-2',
+        title: 'The Golden Hour',
+        director: 'Siddharth Rao',
+        genre: 'Drama',
+        videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+        thumbnail: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=800&q=80',
+        description: 'An aging photographer revisits his childhood village in South India to capture one last sunset before losing his vision.',
+        views: 28900,
+        status: 'approved',
+        createdAt: Date.now() - 86400000 * 10
+      },
+      {
+        id: 'film-3',
+        title: 'Midnight Heist',
+        director: 'Vikram Mehta',
+        genre: 'Thriller',
+        videoUrl: 'https://www.youtube.com/watch?v=L_LUpnjgPso',
+        thumbnail: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=800&q=80',
+        description: 'A team of illusionists attempt to steal a priceless artifact during a blackout in Central Mumbai.',
+        views: 9400,
+        status: 'approved',
+        createdAt: Date.now() - 86400000 * 2
+      },
+      {
+        id: 'film-4',
+        title: 'Chai & Confessions',
+        director: 'Ananya Sharma',
+        genre: 'Comedy',
+        videoUrl: 'https://www.youtube.com/watch?v=3JZ_D3ELwOQ',
+        thumbnail: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80',
+        description: 'Two estranged roomates accidentally swap phones on a rainy afternoon, revealing Hilarious secrets.',
+        views: 18500,
+        status: 'approved',
+        createdAt: Date.now() - 86400000 * 4
+      },
+      {
+        id: 'film-5',
+        title: 'Neon Drift',
+        director: 'Alex Rivera',
+        genre: 'Sci-Fi',
+        videoUrl: 'https://www.youtube.com/watch?v=2g811KoJbu8',
+        thumbnail: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=800&q=80',
+        description: 'High-speed underground hoverboard racing in a cybernetic cityscape.',
+        views: 6200,
+        status: 'approved',
+        createdAt: Date.now() - 86400000 * 1
+      },
+      {
+        id: 'film-6',
+        title: 'The Unsent Letter',
+        director: 'Kavya Nair',
+        genre: 'Drama',
+        videoUrl: 'https://www.youtube.com/watch?v=kJQP7kiw5Fk',
+        thumbnail: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=800&q=80',
+        description: 'Finding an old manuscript hidden inside a vintage typewriter alters a young writer’s destiny forever.',
+        views: 3100,
+        status: 'pending',
+        createdAt: Date.now() - 3600000 * 3
+      }
+    ];
+
+    // STATE MANAGEMENT
+    let films = [];
+    let isAdminLoggedIn = false;
+    let currentGenre = 'All';
+
+    // APP INITIALIZATION
+    window.onload = function() {
+      loadFilmsFromStorage();
+      renderAll();
+    };
+
+    function loadFilmsFromStorage() {
+      const stored = localStorage.getItem('bravelabs_films_data');
+      if (stored) {
+        try {
+          films = JSON.parse(stored);
+        } catch(e) {
+          films = [...DEFAULT_FILMS];
+        }
+      } else {
+        films = [...DEFAULT_FILMS];
+        saveFilmsToStorage();
+      }
+    }
+
+    function saveFilmsToStorage() {
+      localStorage.setItem('bravelabs_films_data', JSON.stringify(films));
+    }
+
+    // NAVIGATION SYSTEM
+    function showSection(sectionId) {
+      if (sectionId === 'admin' && !isAdminLoggedIn) {
+        openAdminModal();
+        return;
+      }
+
+      const sections = ['home', 'top10', 'monetization', 'admin'];
+      sections.forEach(id => {
+        const el = document.getElementById(`section-${id}`);
+        if (el) el.classList.add('hidden');
+        
+        const navEl = document.getElementById(`nav-${id}`);
+        if (navEl) {
+          navEl.classList.remove('text-red-500');
+          navEl.classList.add('text-gray-400');
+        }
+      });
+
+      const activeEl = document.getElementById(`section-${sectionId}`);
+      if (activeEl) activeEl.classList.remove('hidden');
+
+      const activeNav = document.getElementById(`nav-${sectionId}`);
+      if (activeNav) {
+        activeNav.classList.add('text-red-500');
+        activeNav.classList.remove('text-gray-400');
+      }
+
+      // Refresh section content
+      if (sectionId === 'home') renderHomeGrid();
+      if (sectionId === 'top10') renderTop10Leaderboard();
+      if (sectionId === 'admin') renderAdminDashboard();
+    }
+
+    // RENDER FUNCTIONS
+    function renderAll() {
+      renderHeroSpotlight();
+      renderHomeGrid();
+      renderTop10Leaderboard();
+      if (isAdminLoggedIn) renderAdminDashboard();
+    }
+
+    function getApprovedFilms() {
+      return films.filter(f => f.status === 'approved');
+    }
+
+    function renderHeroSpotlight() {
+      const approved = getApprovedFilms().sort((a, b) => b.views - a.views);
+      const heroContainer = document.getElementById('hero-spotlight');
+      
+      if (approved.length === 0) {
+        heroContainer.innerHTML = `<div class="p-8 text-center text-gray-400">No films available. Upload one now!</div>`;
+        return;
+      }
+
+      const topFilm = approved[0];
+      heroContainer.innerHTML = `
+        <div class="relative min-h-[360px] md:min-h-[420px] flex items-end p-6 sm:p-10" style="background: linear-gradient(to top, rgba(15,15,18,0.95) 10%, rgba(15,15,18,0.4) 60%, rgba(15,15,18,0.2)), url('${topFilm.thumbnail}') center/cover no-repeat;">
+          <div class="max-w-2xl space-y-3 z-10">
+            <div class="flex items-center space-x-2">
+              <span class="bg-amber-500 text-black text-xs font-black uppercase px-2.5 py-1 rounded-md shadow">
+                <i class="fa-solid fa-crown mr-1"></i> #1 Most Watched This Week
+              </span>
+              <span class="bg-gray-800/80 backdrop-blur text-gray-300 text-xs px-2.5 py-1 rounded-md border border-gray-700">
+                ${topFilm.genre}
+              </span>
+            </div>
+            <h1 class="text-3xl sm:text-5xl font-black text-white leading-tight drop-shadow-md">${topFilm.title}</h1>
+            <p class="text-xs sm:text-sm text-gray-300 line-clamp-2 max-w-xl">${topFilm.description}</p>
+            <div class="flex items-center space-x-4 text-xs text-gray-300 pt-1">
+              <span><i class="fa-solid fa-user-ninja text-red-500 mr-1"></i> Dir. ${topFilm.director}</span>
+              <span><i class="fa-solid fa-eye text-red-500 mr-1"></i> ${topFilm.views.toLocaleString()} Views</span>
+            </div>
+            <div class="pt-3 flex items-center space-x-3">
+              <button onclick="playFilm('${topFilm.id}')" class="bg-red-600 hover:bg-red-500 text-white font-extrabold px-6 py-3 rounded-xl flex items-center space-x-2 text-sm shadow-xl shadow-red-900/50 transition-all hover:scale-105 active:scale-95">
+                <i class="fa-solid fa-play"></i>
+                <span>Watch Film Now</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderHomeGrid() {
+      const searchQuery = document.getElementById('search-input').value.toLowerCase();
+      let list = getApprovedFilms();
+
+      if (currentGenre !== 'All') {
+        list = list.filter(f => f.genre === currentGenre);
+      }
+
+      if (searchQuery) {
+        list = list.filter(f => 
+          f.title.toLowerCase().includes(searchQuery) ||
+          f.director.toLowerCase().includes(searchQuery) ||
+          f.description.toLowerCase().includes(searchQuery)
+        );
+      }
+
+      document.getElementById('film-count').textContent = `Showing ${list.length} films`;
+      const grid = document.getElementById('films-grid');
+
+      if (list.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full text-center py-12 text-gray-500 space-y-3">
+            <i class="fa-solid fa-film text-4xl text-gray-700"></i>
+            <p class="text-sm">No short films found matching your criteria.</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = list.map(film => `
+        <div class="bg-brand-card border border-gray-800 hover:border-gray-700 rounded-xl overflow-hidden shadow-lg group transition-all duration-300 flex flex-col">
+          <!-- Thumbnail -->
+          <div class="relative aspect-video overflow-hidden bg-gray-900 cursor-pointer" onclick="playFilm('${film.id}')">
+            <img src="${film.thumbnail}" alt="${film.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=800&q=80'">
+            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <div class="w-12 h-12 bg-red-600 text-white rounded-full flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform">
+                <i class="fa-solid fa-play text-lg ml-0.5"></i>
+              </div>
+            </div>
+            <span class="absolute bottom-2 right-2 bg-black/80 text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded border border-amber-500/30">
+              <i class="fa-solid fa-eye mr-1"></i>${film.views.toLocaleString()}
+            </span>
+          </div>
+
+          <!-- Info -->
+          <div class="p-4 flex-grow flex flex-col justify-between space-y-3">
+            <div>
+              <div class="flex items-center justify-between text-[11px] text-gray-400 mb-1">
+                <span class="text-red-400 font-semibold">${film.genre}</span>
+                <span>Dir. ${film.director}</span>
+              </div>
+              <h3 class="font-bold text-white text-base group-hover:text-red-400 transition-colors line-clamp-1">${film.title}</h3>
+              <p class="text-xs text-gray-400 line-clamp-2 mt-1">${film.description}</p>
+            </div>
+
+            <button onclick="playFilm('${film.id}')" class="w-full bg-gray-800 hover:bg-red-600 text-gray-200 hover:text-white py-2 rounded-lg text-xs font-semibold flex items-center justify-center space-x-2 transition-colors">
+              <i class="fa-solid fa-circle-play"></i>
+              <span>Watch Film</span>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderTop10Leaderboard() {
+      // Sort approved films by views descending
+      const sorted = [...getApprovedFilms()].sort((a, b) => b.views - a.views).slice(0, 10);
+      
+      const top1Container = document.getElementById('top1-spotlight');
+      const top10Container = document.getElementById('top10-list');
+
+      if (sorted.length === 0) {
+        top1Container.innerHTML = '';
+        top10Container.innerHTML = `<p class="text-center py-8 text-gray-500 text-sm">No ranked films available yet.</p>`;
+        return;
+      }
+
+      // Render Top 1
+      const top1 = sorted[0];
+      top1Container.innerHTML = `
+        <div class="bg-gradient-to-r from-amber-500/10 via-brand-card to-brand-card border-2 border-amber-500/50 rounded-2xl p-6 shadow-2xl relative overflow-hidden">
+          <div class="absolute -right-6 -bottom-6 text-amber-500/10 text-9xl font-black pointer-events-none">#1</div>
+          <div class="flex flex-col md:flex-row items-center gap-6 z-10 relative">
+            <div class="relative w-full md:w-72 aspect-video rounded-xl overflow-hidden shrink-0 cursor-pointer" onclick="playFilm('${top1.id}')">
+              <img src="${top1.thumbnail}" class="w-full h-full object-cover">
+              <div class="absolute inset-0 bg-black/30 flex items-center justify-center">
+                <i class="fa-solid fa-play text-3xl text-white drop-shadow-lg"></i>
+              </div>
+            </div>
+            <div class="space-y-3 flex-grow text-center md:text-left">
+              <div class="inline-flex items-center space-x-2 bg-amber-500 text-black font-extrabold text-xs px-3 py-1 rounded-full uppercase">
+                <i class="fa-solid fa-trophy"></i>
+                <span>Weekly Champion - Top 1 Film</span>
+              </div>
+              <h2 class="text-2xl sm:text-3xl font-black text-white">${top1.title}</h2>
+              <p class="text-xs text-gray-300 line-clamp-2">${top1.description}</p>
+              <div class="flex flex-wrap items-center justify-center md:justify-start gap-4 text-xs text-gray-400">
+                <span><i class="fa-solid fa-user text-amber-400 mr-1"></i> Director: <strong>${top1.director}</strong></span>
+                <span><i class="fa-solid fa-layer-group text-amber-400 mr-1"></i> Genre: <strong>${top1.genre}</strong></span>
+                <span class="text-amber-400 font-bold"><i class="fa-solid fa-fire mr-1"></i> ${top1.views.toLocaleString()} Total Views</span>
+              </div>
+              <div class="pt-2">
+                <button onclick="playFilm('${top1.id}')" class="bg-amber-500 hover:bg-amber-400 text-black font-bold px-5 py-2.5 rounded-lg text-xs transition-all shadow-lg shadow-amber-500/20">
+                  Watch Top 1 Film
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Render Top 2 - 10
+      const remaining = sorted.slice(1);
+      if (remaining.length === 0) {
+        top10Container.innerHTML = `<p class="text-xs text-gray-500 italic text-center py-4">More films will appear as view counts rise!</p>`;
+        return;
+      }
+
+      top10Container.innerHTML = remaining.map((film, idx) => `
+        <div class="bg-brand-card hover:bg-brand-hover border border-gray-800 rounded-xl p-4 flex items-center justify-between gap-4 transition-all cursor-pointer" onclick="playFilm('${film.id}')">
+          <div class="flex items-center space-x-4">
+            <span class="text-xl font-black text-gray-500 w-8 text-center">#${idx + 2}</span>
+            <img src="${film.thumbnail}" class="w-16 h-10 object-cover rounded-lg shrink-0">
+            <div>
+              <h4 class="font-bold text-white text-sm hover:text-red-400 transition-colors">${film.title}</h4>
+              <p class="text-[11px] text-gray-400">Dir. ${film.director} • <span class="text-gray-500">${film.genre}</span></p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-4">
+            <span class="text-xs font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-full">
+              <i class="fa-solid fa-eye mr-1"></i>${film.views.toLocaleString()}
+            </span>
+            <i class="fa-solid fa-chevron-right text-gray-600 text-xs"></i>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderAdminDashboard() {
+      const pendingList = films.filter(f => f.status === 'pending');
+      const approvedList = films.filter(f => f.status === 'approved');
+
+      document.getElementById('pending-count-badge').textContent = `${pendingList.length} Pending`;
+
+      const pendingContainer = document.getElementById('pending-films-list');
+      if (pendingList.length === 0) {
+        pendingContainer.innerHTML = `<p class="p-6 text-center text-xs text-gray-500">No pending submissions to review.</p>`;
+      } else {
+        pendingContainer.innerHTML = pendingList.map(film => `
+          <div class="p-4 sm:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div class="flex items-start space-x-4">
+              <img src="${film.thumbnail}" class="w-20 h-14 object-cover rounded-lg shrink-0 border border-gray-800">
+              <div class="space-y-1">
+                <div class="flex items-center space-x-2">
+                  <h4 class="font-bold text-white text-base">${film.title}</h4>
+                  <span class="bg-gray-800 text-gray-300 text-[10px] px-2 py-0.5 rounded">${film.genre}</span>
+                </div>
+                <p class="text-xs text-gray-400">Director: <strong class="text-gray-200">${film.director}</strong></p>
+                <p class="text-xs text-gray-300 line-clamp-1 max-w-lg">${film.description}</p>
+                <a href="${film.videoUrl}" target="_blank" class="text-[11px] text-red-400 hover:underline inline-flex items-center">
+                  <i class="fa-solid fa-external-link mr-1"></i> Preview Stream Link
+                </a>
+              </div>
+            </div>
+
+            <div class="flex items-center space-x-2 shrink-0">
+              <button onclick="approveFilm('${film.id}')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center space-x-1 shadow">
+                <i class="fa-solid fa-check"></i>
+                <span>Approve</span>
+              </button>
+              <button onclick="rejectFilm('${film.id}')" class="bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/30 px-3 py-2 rounded-lg text-xs font-bold transition-all">
+                <i class="fa-solid fa-xmark"></i>
+                <span>Reject</span>
+              </button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      const approvedContainer = document.getElementById('approved-films-list');
+      if (approvedList.length === 0) {
+        approvedContainer.innerHTML = `<p class="p-6 text-center text-xs text-gray-500">No approved films cataloged.</p>`;
+      } else {
+        approvedContainer.innerHTML = approvedList.map(film => `
+          <div class="p-4 flex items-center justify-between gap-4">
+            <div class="flex items-center space-x-3">
+              <img src="${film.thumbnail}" class="w-12 h-8 object-cover rounded">
+              <div>
+                <h5 class="font-bold text-white text-xs">${film.title}</h5>
+                <p class="text-[10px] text-gray-400">Dir. ${film.director} • ${film.views.toLocaleString()} Views</p>
+              </div>
+            </div>
+            <button onclick="deleteFilm('${film.id}')" class="text-gray-500 hover:text-red-500 text-xs p-2 transition-colors">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+          </div>
+        `).join('');
+      }
+    }
+
+    // STREAMING VIDEO PLAYER SYSTEM
+    function playFilm(id) {
+      const film = films.find(f => f.id === id);
+      if (!film) return;
+
+      // Increment View Count
+      film.views += 1;
+      saveFilmsToStorage();
+      renderAll();
+
+      document.getElementById('player-title').textContent = film.title;
+      document.getElementById('player-director').textContent = `Director: ${film.director}`;
+      document.getElementById('player-genre').textContent = film.genre;
+      document.getElementById('player-views').textContent = `${film.views.toLocaleString()} Views`;
+      document.getElementById('player-description').textContent = film.description;
+
+      const playerContainer = document.getElementById('player-container');
+      
+      // Embed logic (YouTube or direct video HTML5)
+      if (film.videoUrl.includes('youtube.com') || film.videoUrl.includes('youtu.be')) {
+        let ytId = '';
+        if (film.videoUrl.includes('v=')) {
+          ytId = film.videoUrl.split('v=')[1].split('&')[0];
+        } else if (film.videoUrl.includes('youtu.be/')) {
+          ytId = film.videoUrl.split('youtu.be/')[1];
+        }
+        playerContainer.innerHTML = `
+          <iframe class="w-full h-full" src="https://www.youtube.com/embed/${ytId}?autoplay=1" title="${film.title}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        `;
+      } else {
+        playerContainer.innerHTML = `
+          <video controls autoplay class="w-full h-full object-contain">
+            <source src="${film.videoUrl}" type="video/mp4">
+            Your browser does not support HTML5 video playback.
+          </video>
+        `;
+      }
+
+      document.getElementById('modal-player').classList.remove('hidden');
+    }
+
+    function closePlayerModal() {
+      document.getElementById('modal-player').classList.add('hidden');
+      document.getElementById('player-container').innerHTML = '';
+    }
+
+    // UPLOAD MODAL LOGIC
+    function openUploadModal() {
+      document.getElementById('modal-upload').classList.remove('hidden');
+    }
+
+    function closeUploadModal() {
+      document.getElementById('modal-upload').classList.add('hidden');
+    }
+
+    function handleFilmSubmission(e) {
+      e.preventDefault();
+      
+      const newFilm = {
+        id: 'film-' + Date.now(),
+        title: document.getElementById('up-title').value.trim(),
+        director: document.getElementById('up-director').value.trim(),
+        genre: document.getElementById('up-genre').value,
+        videoUrl: document.getElementById('up-videourl').value.trim(),
+        thumbnail: document.getElementById('up-thumburl').value.trim(),
+        description: document.getElementById('up-description').value.trim(),
+        views: 1, // initial starting view
+        status: 'pending',
+        createdAt: Date.now()
+      };
+
+      films.unshift(newFilm);
+      saveFilmsToStorage();
+      closeUploadModal();
+      document.getElementById('upload-form').reset();
+
+      showToast('Film submitted successfully! Pending Brave Labs admin review.', 'success');
+      renderAll();
+    }
+
+    // ADMIN AUTHENTICATION LOGIC
+    function openAdminModal() {
+      if (isAdminLoggedIn) {
+        showSection('admin');
+      } else {
+        document.getElementById('modal-admin-login').classList.remove('hidden');
+      }
+    }
+
+    function closeAdminModal() {
+      document.getElementById('modal-admin-login').classList.add('hidden');
+    }
+
+    function handleAdminLogin(e) {
+      e.preventDefault();
+      const pwd = document.getElementById('admin-password-input').value;
+
+      if (pwd === 'bravelabs') {
+        isAdminLoggedIn = true;
+        closeAdminModal();
+        document.getElementById('admin-password-input').value = '';
+        document.getElementById('admin-btn-text').textContent = 'Admin Panel';
+        showToast('Admin mode authenticated!', 'success');
+        showSection('admin');
+      } else {
+        showToast('Incorrect Admin Password!', 'error');
+      }
+    }
+
+    function logoutAdmin() {
+      isAdminLoggedIn = false;
+      document.getElementById('admin-btn-text').textContent = 'Admin';
+      showToast('Logged out of Admin Portal', 'info');
+      showSection('home');
+    }
+
+    // MODERATION ACTIONS
+    function approveFilm(id) {
+      const film = films.find(f => f.id === id);
+      if (film) {
+        film.status = 'approved';
+        saveFilmsToStorage();
+        renderAll();
+        showToast(`"${film.title}" has been approved and published!`, 'success');
+      }
+    }
+
+    function rejectFilm(id) {
+      films = films.filter(f => f.id !== id);
+      saveFilmsToStorage();
+      renderAll();
+      showToast('Submission rejected and removed.', 'info');
+    }
+
+    function deleteFilm(id) {
+      if (confirm('Are you sure you want to delete this film from the platform?')) {
+        films = films.filter(f => f.id !== id);
+        saveFilmsToStorage();
+        renderAll();
+        showToast('Film deleted from live catalog.', 'info');
+      }
+    }
+
+    // FILTERS & CALCULATORS
+    function setGenreFilter(genre) {
+      currentGenre = genre;
+      const btns = document.querySelectorAll('.genre-btn');
+      btns.forEach(btn => {
+        if (btn.textContent.trim().includes(genre) || (genre === 'All' && btn.textContent.includes('All'))) {
+          btn.classList.add('bg-red-600', 'text-white');
+          btn.classList.remove('bg-gray-800', 'text-gray-300');
+        } else {
+          btn.classList.remove('bg-red-600', 'text-white');
+          btn.classList.add('bg-gray-800', 'text-gray-300');
+        }
+      });
+      renderHomeGrid();
+    }
+
+    function filterFilms() {
+      renderHomeGrid();
+    }
+
+    function updateEarningsCalc() {
+      const val = parseInt(document.getElementById('view-slider').value);
+      document.getElementById('slider-view-val').textContent = `${val.toLocaleString()} views`;
+      
+      // Calculate earnings at $5 per 1,000 views
+      const payout = (val / 1000) * 5;
+      document.getElementById('estimated-payout').textContent = `$${payout.toFixed(2)}`;
+    }
+
+    // TOAST NOTIFICATIONS SYSTEM
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+
+      let bgColor = 'bg-gray-800 border-gray-700 text-gray-200';
+      let icon = 'fa-circle-info text-blue-400';
+
+      if (type === 'success') {
+        bgColor = 'bg-brand-card border-emerald-500/50 text-emerald-300';
+        icon = 'fa-circle-check text-emerald-400';
+      } else if (type === 'error') {
+        bgColor = 'bg-brand-card border-red-500/50 text-red-300';
+        icon = 'fa-triangle-exclamation text-red-400';
+      }
+
+      toast.className = `p-4 rounded-xl border ${bgColor} shadow-2xl flex items-center space-x-3 text-xs font-semibold transform transition-all duration-300 translate-y-5 opacity-0 pointer-events-auto`;
+      toast.innerHTML = `<i class="fa-solid ${icon} text-base"></i><span>${message}</span>`;
+
+      container.appendChild(toast);
+
+      // Animate in
+      setTimeout(() => {
+        toast.classList.remove('translate-y-5', 'opacity-0');
+      }, 10);
+
+      // Animate out
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+  </script>
+</body>
+</html>
